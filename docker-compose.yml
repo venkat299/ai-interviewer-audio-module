@@ -1,0 +1,46 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_interviewer
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+  asr:
+    build: ./apps/asr
+    ports:
+      - "8001:8000"
+  nlp:
+    build: ./apps/nlp
+    ports:
+      - "8002:8000"
+  biometrics:
+    build: ./apps/biometrics
+    ports:
+      - "8003:8000"
+  gateway:
+    build: ./apps/gateway
+    environment:
+      PG_URL: postgres://postgres:postgres@postgres:5432/ai_interviewer
+      JWT_DEV_TOKEN: dev-token
+      ASR_URL: http://asr:8000
+      NLP_URL: http://nlp:8000
+      BIO_URL: http://biometrics:8000
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - asr
+      - nlp
+      - biometrics
+  client:
+    build: ./apps/client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway

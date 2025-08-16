@@ -1,0 +1,11 @@
+{
+  "name": "gateway",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "fastify": "^4.21.0",
+    "fastify-websocket": "^6.0.1",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.11.3"
+  }
+}
